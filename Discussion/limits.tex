@@ -1,0 +1,62 @@
+\subsection[Limitations]{Limitations}
+\label{limitations}
+
+		Because our system is fully automated, it is also susceptible to being stopped by mechanisms in web applications that prevent automated crawls or form submissions. Measures such as CAPTCHA and hidden form fields are often used to detect bots~\cite{captchas3, captchas2}.
+
+		We made sure that we do not fuzz hidden fields in the form, however, despite considerable active research in breaking CAPTCHAs~\cite{captchas2, captchas}, breaking CAPTCHAs remains out of the scope of this project.
+
+	   Due to the growing emphasis on responsive web applications, more and more web applications are being built with only client-side  JavaScript. Even conventional web applications use JavaScript to dynamically insert content and update the pages. This trend means that these dynamically injected HTML components are not part of the initial HTML that is sent to the client by the server.
+
+		Thus, our system will not see dynamically injected forms and hence is unable to detect whether \ehi vulnerabilities are present in these forms. The workaround would be to use a JavaScript engine to query for the \texttt{document.getElementsByTagName('html')[0].innerHTML} (from inside web browser automation tools such as Selenium), then use that as the source HTML. We chose not to do this for performance reasons. 
+
+		During the crawl, our system was blacklisted by a few web applications (mostly WordPress ones), and Internet Service Providers (ISPs).
+		To overcome this, we did two things:
+		\begin{enumerate}
+			\item Used an IP range of 60 different IP addresses.
+			\item Used a blacklist of our own to prevent our Fuzzer from fuzzing web application that are known to blacklist automated crawlers.  However, we could not gather any data about these web applications.
+		\end{enumerate}
+
+		We found that certain WordPress plugins prevent the \ehi attack by sanitizing user input on contact forms. Although not all  WordPress web applications are secure, between the presence of the plugins on some websites, and getting tagged as ``spambots'' by others, we found few vulnerabilities on WordPress web applications.
+
+        E-Mail libraries such as the PHP Extension and Application Repository's (PEAR) mail library provide sanitization for user input. While this is not strictly a limitation of our project, it still means that we are not able to inject sites that used these libraries successfully.
+
+        Because we search for the words \texttt{e-mail}, \texttt{mail}, or \texttt{email} within the HTML form, if the website does not use English names for its forms our system will not be able to find the presence of an \email field. An example is shown in Listing~\ref{code:htmlfrench}. Here, the French word for \texttt{e-mail}---courrier électronique---is used, and our system is unable to find the presence of the e-mail form. 
+
+        The parser that we use for HTML parsing---Beautiful Soup---does not parse malformed HTML and throws an exception on encountering malformed HTML. Thus, we have designed the system to exit gracefully on such occasions. A side-effect of this is that our system is unable to test web applications with bad HTML markup\,\footnotemark.
+
+        \footnotetext{We do not have any data about whether bad markup indicates an overall lower quality of the web application, and thus cannot comment on whether such websites are more likely to have vulnerabilities.}
+
+        Black-box testing is highly beneficial as explained in Section~\ref{sys:appr}, however it also has a drawback in that we cannot verify whether the reported vulnerability exists in the source code or is a feature of the website (e.g., the website allows users to send bulk e-mail, adding as many \texttt{cc} or \texttt{bcc} headers). We must manually notify the developers to get this feedback.
+
+%%        	As discussed in Section~\ref{Comp:EMFC}, we only search for the words \texttt{email}, \texttt{mail} or \texttt{e-mail} (case insensitive) inside the forms to detect the presence of e-mail fields, instead of searching for an \colorbox{lightgray}{\lstinline{<input type = email>}}. This might result in a false positive in certain forms, like the one shown in Listing~\ref{code:false_positive}.
+
+%%        	\begin{lstlisting}[language=HTML,caption={E-Mail field checker
+%%               - false positives, the system incorrectly classifies
+%%               this as an e-mail form.},label={code:false_positive}, float]
+%% <form method="post">
+%% E-Mail us if you have any questions!!
+%% <input type="text" name="query"><br>
+%% <input type="submit" value="Search">
+%% </form>
+%%        	\end{lstlisting}
+
+%%        	The word \texttt{E-Mail} on Line 2 will result in our system classifying this form as a potential e-mail form, while it clearly is not. However, as we will see, this is not really a significant issue, as despite being added to the \texttt{email\_forms} table, this form will never be injected in the `fuzzer' due to the absence of the appropriate input field in the form. We chose to go with this design, as it allows us to detect almost every form that provides the capability to send or receive e-mail.
+
+
+\begin{lstlisting}[language=HTML,caption={HTML page with e-mail form, written in a different language - French.},label={code:htmlfrench}, literate=%
+	{é}{{\'e}}1, float]
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="author" content="XYZ">
+<title>Mock Email</title></head>
+<body>
+<form action="{path-to-back-end}" method="post">
+<input type="text" placeholder="courrier électronique"
+	name="courrier_électronique"><br>
+<textarea name="msg" rows="20" cols="120"></textarea>
+<input type="submit" value="courrier électronique!">
+</form></body>
+</html>
+\end{lstlisting}

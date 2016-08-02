@@ -1,0 +1,26 @@
+\begin{lstlisting}[language=Python,caption={Python program with e-mail
+      header injection vulnerability.},label={code:pyemi}, float]
+from email.parser import Parser
+import cgi
+form = cgi.FieldStorage()
+to = form["email"] # input() exhibits 
+# the same behavior
+msg = """To: """ + to + """\n
+From: <user@example.com>\n
+Subject: Test message\n\n
+Body would go here\n"""
+
+f = FeedParser() # Parser.parsestr() 
+# also contains the same vulnerability
+f.feed(msg)
+headers = FeedParser.close(f)
+
+# attack string => 
+# 'abc@example.com\nBCC:spc@example.com'
+# for form["email"]
+
+# to:abc@example.com AND bcc:spc@example.com 
+# are added to the headers
+print 'To: %s' % headers['to']
+print 'BCC: %s' % headers['bcc']
+\end{lstlisting}
