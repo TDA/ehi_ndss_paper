@@ -7,6 +7,7 @@
 
 	   Due to the growing emphasis on responsive web applications, more and more web applications are being built with only client-side  JavaScript. Even conventional web applications use JavaScript to dynamically insert content and update the pages. This trend means that these dynamically injected HTML components are not part of the initial HTML that is sent to the client by the server.
 
+		%TODO add a table here, and explanation about performance tradeoffs with Selenium and bs4.
 		Thus, our system will not see dynamically injected forms and hence is unable to detect whether \ehi vulnerabilities are present in these forms. The workaround would be to use a JavaScript engine to query for the \texttt{document.getElementsByTagName('html')[0].innerHTML} (from inside web browser automation tools such as Selenium), then use that as the source HTML. We chose not to do this for performance reasons. 
 
 		During the crawl, our system was blacklisted by a few web applications (mostly WordPress ones), and Internet Service Providers (ISPs).

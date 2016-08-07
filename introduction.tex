@@ -8,11 +8,12 @@ Many common and well-known web application vulnerabilities, such as SQL Injectio
 With the proper injection string, \ehi vulnerabilities can be exploited by an attacker to inject additional headers, modify existing headers, or alter the contents of the \email---while still appearing to be from a legitimate source. \ehi exploits allow an attacker to perform \email spoofing, resulting in phishing attacks \emph{that are sent from the actual \email server}.
 
 While some command injection vulnerabilities have received extensive attention from the research community, \ehi vulnerabilities have received little focus. Therefore, we study the prevalence of \ehi vulnerabilities on the web. We performed a crawl of the web, extracted forms with \email fields, and injected them with different payloads to infer the existence of an \ehi vulnerability. We then audited received \emails to see if any of the injected data was present. This allowed us to classify whether a particular URL was vulnerable to the attack. Our automated system works in a black-box manner, without looking at the web application's source code, and only analyzes the \emails we receive based on the injected payloads.
-%% The objective of our research is to study the prevalence of this vulnerability on the World Wide Web, and identify whether further research is required in this area.
+
+%TODO Adam: Added a line to make clear that we wanted a quantification before attempting something like a source-code analyzer. This addresses reviewer 690B's concerns.
+The objective of our research is to study the prevalence of this vulnerability on the World Wide Web, and identify whether further research is required in this area.
 \\
 
 \noindent{}In summary, we make the following contributions:
-% TODO: make clear the contributions
 \begin{itemize}
 
 \item We develop a black-box approach to detect \ehi vulnerabilities in a web application.
