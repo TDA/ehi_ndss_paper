@@ -13,10 +13,11 @@
 		
 		\begin{table}
 			\centering
+			\normalsize
 			\begin{tabular}{|p{4cm}|c|c|}
 				\hline
 				\multicolumn{1}{|c}{\textbf{Method}} &
-				\multicolumn{1}{|c|}{\textbf{Running time (in seconds)}} &
+				\multicolumn{1}{|c|}{\textbf{Running time}} &
 				\multicolumn{1}{|c|}{\textbf{Slowdown}}
 				\\
 				\hline
@@ -28,7 +29,7 @@
 				\hline
 			\end{tabular}
 			\label{tab:perf}
-			\caption[\titlecap{}]{Running times for crawling, parsing, and detecting presence of \email fields in 1000 random wikipedia pages.}
+			\caption[\titlecap{}]{Running times in seconds for crawling, parsing, and detecting presence of \email fields in 1000 random wikipedia pages.}
 		\end{table}
 
         Because we search for the words \texttt{e-mail}, \texttt{mail}, or \texttt{email} within the HTML form, if the website does not use English names for its forms our system will not be able to find the presence of an \email field. An example is shown in Listing~\ref{code:htmlfrench}. Here, the French word for \texttt{e-mail}---courrier électronique---is used, and our system is unable to find the presence of the e-mail field. 
